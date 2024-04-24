@@ -15,7 +15,7 @@ Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.Load
 
 + Unity Burst (Unity内置包)
 + Unity Mathematics (Unity内置包) —— Unity Burst 的前置包，安装Unity Burst时会自动导入。
-
++ [UnityAsyncImageLoader-0.1.2](https://github.com/Looooong/UnityAsyncImageLoader) (已经包含在项目中)
 ## 核心脚本文件介绍
 
 | 脚本文件                              | 功能描述                                                                                                                                                                             |
