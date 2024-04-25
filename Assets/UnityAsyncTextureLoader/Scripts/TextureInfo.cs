@@ -21,7 +21,7 @@ namespace MFramework.AsyncTextureLoader
         /// <summary>
         /// 纹理名称
         /// </summary>
-        public string TextureName => Info.Name;
+        public string TextureName => Info.Name.Substring(0, Info.Name.LastIndexOf('.'));
 
         /// <summary>
         /// 纹理扩展名
@@ -147,7 +147,9 @@ namespace MFramework.AsyncTextureLoader
             textureQuality = TextureQuality.LowQuality;
             Texture.filterMode = FilterMode.Point;
             Texture.anisoLevel = 1;
-            Texture.Compress(false);
+            if (TextureWidth % 4 != 0 || TextureHeight % 4 != 0) {
+                Texture.Compress(false);
+            }
             Texture.minimumMipmapLevel = 0;
             Texture.wrapMode = TextureWrapMode.Repeat;
         }
@@ -159,7 +161,9 @@ namespace MFramework.AsyncTextureLoader
             textureQuality = TextureQuality.MediumQuality;
             Texture.filterMode = FilterMode.Bilinear;
             Texture.anisoLevel = 6;
-            Texture.Compress(true);
+            if (TextureWidth % 4 != 0 || TextureHeight % 4 != 0) {
+                Texture.Compress(false);
+            }
             Texture.minimumMipmapLevel = (int)(Texture.mipmapCount * 0.5f);
             Texture.wrapMode = TextureWrapMode.Clamp;
         }
