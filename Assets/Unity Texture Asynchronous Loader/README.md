@@ -1,4 +1,4 @@
-# Unity Texture Async Loader
+# Unity Texture Asynchronous Loader
 
 Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.LoadImage`](https://docs.unity3d.com/ScriptReference/ImageConversion.LoadImage.html)
 和`Texture2D.LoadImage` 速度很慢。 它们在加载图像时会阻塞 Unity 主线程，持续时间为一百毫秒甚至几秒。
@@ -16,6 +16,7 @@ Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.Load
 + Unity Burst (Unity内置包)
 + Unity Mathematics (Unity内置包) —— Unity Burst 的前置包，安装Unity Burst时会自动导入。
 + [UnityAsyncImageLoader-0.1.2](https://github.com/Looooong/UnityAsyncImageLoader) (已经包含在项目中)
+
 ## 核心脚本文件介绍
 
 | 脚本文件                              | 功能描述                                                                                                                                                                             |
@@ -173,7 +174,9 @@ Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.Load
 ## 注意事项
 
 + 所有方法均没有错误处理机制，请确保在使用异步加载之前检查目标路径是否正确。
-
++ 异步加载的`Texture2D`
+  对象的纹理像素数会保持与原始文件分辨率相同，这意味着长宽不会像手动导入Unity编辑器哪样保持宽高为4的n次方幂个像素数，这将使得诸如`Texture2D.Compress(bool)`
+  等对原始纹理数据做操作的编程API可能会出错。如果想避免这种情况，可能需要手动对原始数据做二次处理。
 + 使用`TextureInfo`的`SetTextureQuality()`方法和`TextureQuality`
   字段设置纹理质量时，具体的质量等级详细设置并没有科学或者严谨的配置标准，如需修改不同的配置详情，请根据实际情况自行在`TextureInfo`
   类中更改设置方法，或者使用`Texture2D`类来自行详细设置每一项。 **现有的配置如下：**
@@ -203,7 +206,9 @@ Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.Load
             textureQuality = TextureQuality.LowQuality;
             Texture.filterMode = FilterMode.Point;
             Texture.anisoLevel = 1;
-            Texture.Compress(false);
+            if (TextureWidth % 4 != 0 || TextureHeight % 4 != 0) {
+                Texture.Compress(false);
+            }
             Texture.minimumMipmapLevel = 0;
             Texture.wrapMode = TextureWrapMode.Repeat;
         }
@@ -215,7 +220,9 @@ Unity中，在运行时加载大图像（大于2K）时，[`ImageConversion.Load
             textureQuality = TextureQuality.MediumQuality;
             Texture.filterMode = FilterMode.Bilinear;
             Texture.anisoLevel = 6;
-            Texture.Compress(true);
+            if (TextureWidth % 4 != 0 || TextureHeight % 4 != 0) {
+                Texture.Compress(false);
+            }
             Texture.minimumMipmapLevel = (int)(Texture.mipmapCount * 0.5f);
             Texture.wrapMode = TextureWrapMode.Clamp;
         }

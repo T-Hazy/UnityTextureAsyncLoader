@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace MFramework.AsyncTextureLoader
 {
-    public class TextureAsyncLoaderExample : MonoBehaviour
+    public class TextureAsynchronousLoaderExample : MonoBehaviour
     {
         public TextureQuality Quality;
         public string TexturePath;
